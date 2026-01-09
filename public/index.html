@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Scan | Barkod Okutma</title>
+  <!-- Cache busting: yeni deploy'larda eski JS/CSS cache'ini kırmak için -->
+  <link rel="stylesheet" href="/styles.css?v=20260109-2" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">SCAN</div>
+      <div class="subtitle">Barkod Okut • Ürün Bul • PDF Oluştur</div>
+    </div>
+    <div class="status" id="statusLine">
+      <span class="pill" id="pillHttps">HTTPS</span>
+      <span class="pill" id="pillCam">Kamera</span>
+      <span class="pill" id="pillMic">Mikrofon</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="cardTitle">Arama</div>
+
+      <div class="grid2">
+        <div class="field">
+          <label for="barcodeInput">Barkod / Stok Kodu / Ürün Adı</label>
+          <div class="row">
+            <input id="barcodeInput" type="text" inputmode="numeric" placeholder="Örn: 8695077088932" />
+            <button class="btn primary" id="btnSearch">Ara</button>
+          </div>
+          <div class="help">Barkod okutabilir, manuel yazabilir veya sesle söyleyebilirsin.</div>
+        </div>
+
+        <div class="field">
+          <label>Hızlı İşlemler</label>
+          <div class="row wrap">
+            <button class="btn" id="btnStartCam">Kamerayı Aç</button>
+            <button class="btn" id="btnStopCam" disabled>Kamerayı Kapat</button>
+            <button class="btn" id="btnVoice">Sesli Arama</button>
+            <button class="btn ghost" id="btnClear">Temizle</button>
+          </div>
+          <div class="help" id="capabilities"></div>
+        </div>
+      </div>
+
+      <div class="cameraBox">
+        <div class="cameraHeader">
+          <div>
+            <div class="muted">Canlı Kamera</div>
+            <div class="tiny">Barkodu kadrajın ortasına getir</div>
+          </div>
+          <div class="row">
+            <span class="pill" id="scanState">Kapalı</span>
+          </div>
+        </div>
+
+        <video id="video" playsinline muted></video>
+        <!-- Quagga2 (BarcodeDetector yoksa) kendi video/canvas çıktısını buraya basar -->
+        <div id="quaggaViewport" class="quaggaViewport" aria-hidden="true"></div>
+
+        <div class="cameraFooter">
+          <div class="tiny muted">Not: Bazı iOS sürümlerinde otomatik barkod algılama sınırlı olabilir. Gerekirse manuel giriş kullan.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid2 gap">
+      <section class="card">
+        <div class="cardTitle">Ürün</div>
+        <div id="productBox" class="empty">
+          Henüz ürün yok. Barkod okut veya ara.
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="cardTitle">Sepet</div>
+
+        <div class="cartTop">
+          <div class="field">
+            <label for="customerName">Müşteri Adı</label>
+            <input id="customerName" type="text" placeholder="Örn: Ahmet Yılmaz" />
+          </div>
+          <div class="field">
+            <label for="customerPhone">Telefon</label>
+            <input id="customerPhone" type="tel" placeholder="05xx..." />
+          </div>
+          <div class="field">
+            <label for="customerNote">Not</label>
+            <input id="customerNote" type="text" placeholder="İsteğe bağlı" />
+          </div>
+        </div>
+
+        <div id="cartBox" class="empty">Sepet boş.</div>
+
+        <div class="cartFooter">
+          <div class="total">
+            <div class="muted">Genel Toplam</div>
+            <div class="big" id="grandTotal">0.00</div>
+          </div>
+          <div class="row">
+            <button class="btn" id="btnClearCart">Sepeti Temizle</button>
+            <button class="btn primary" id="btnPdf" disabled>PDF Oluştur</button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="card">
+      <div class="cardTitle">Log</div>
+      <pre id="log" class="log"></pre>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="tiny muted">scan.oyunbozan.io • Node.js API: /api/product • /api/pdf</div>
+  </footer>
+
+  <script src="https://unpkg.com/@ericblade/quagga2/dist/quagga.min.js"></script>
+  <script src="/app.js?v=20260109-2"></script>
+</body>
+</html>
